@@ -2,27 +2,39 @@
 #
 # Table name: users
 #
-#  id         :integer          not null, primary key
-#  name       :string(255)
-#  email      :string(255)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
+#  id              :integer          not null, primary key
+#  name            :string(255)
+#  email           :string(255)
+#  created_at      :datetime         not null
+#  updated_at      :datetime         not null
+#  password_digest :string(255)
 #
 
 require 'spec_helper'
 
 describe User do
-    before { @user = User.new(name: "Example User", email: "user@example.com") }
+	before do
+		@user = User.new(	name: "Example User", 
+											email: "user@example.com",
+											password: "foobar", 
+											password_confirmation: "foobar")
+	end
 
   subject { @user }
 
-  #Test existence of these rows
+  #"Sanity" XD tests...
   it { should respond_to(:name) }
   it { should respond_to(:email) }
+  it { should respond_to(:password_digest) }
+  it { should respond_to(:password) }
+  it { should respond_to(:password_confirmation) }
 
+  # By setting this we only need to test cases,
+  # where things does NOT validate.
+  # Except for some stuff like 'format' validations
   it { should be_valid }
 
-  #Name validations
+  # Name validations
   describe "when name is not present" do
     before { @user.name = " " }
     it { should_not be_valid }
@@ -33,12 +45,13 @@ describe User do
     it { should_not be_valid }
   end
 
-  #Email validations
+  # Email validations
+  # email is blank 
    describe "when email is not present" do
     before { @user.email = " " }
     it { should_not be_valid }
   end
-  #not valid
+  # wrong email format
   describe "when email format is invalid" do
     it "should be invalid" do
       addresses = %w[user@foo,com user_at_foo.org example.user@foo.
@@ -49,7 +62,7 @@ describe User do
       end      
     end
   end
-  #valid
+  # correct email format
   describe "when email format is valid" do
     it "should be valid" do
       addresses = %w[user@foo.COM A_US-ER@f.b.org frst.lst@foo.jp a+b@baz.cn]
@@ -59,15 +72,64 @@ describe User do
       end      
     end
   end
-  #uniqueness, ignores case
+  # with mixed case
+  describe "email address with mixed case" do
+    let(:mixed_case_email) { "Foo@ExAMPle.CoM" }
+
+    it "should be saved as all lower-case" do
+      @user.email = mixed_case_email
+      @user.save
+      @user.reload.email.should == mixed_case_email.downcase
+    end
+  end
+  # email uniqueness in database, ignores case
   describe "when email address is already taken" do
     before do
       user_with_same_email = @user.dup
       user_with_same_email.email = @user.email.upcase
       user_with_same_email.save
     end
-
     it { should_not be_valid }
   end
+  # Password validations
+  # pass is blank
+	describe "when password is not present" do
+	  before { @user.password = @user.password_confirmation = " " }
+	  it { should_not be_valid }
+	end
+	# confirmation doesn't match
+	describe "when password doesn't match confirmation" do
+	  before { @user.password_confirmation = "mismatch" }
+	  it { should_not be_valid }
+	end
+	# confirmation == nil, which validates by default 
+	# This can only happen if you command via rails console
+	describe "when password confirmation is nil" do
+	  before { @user.password_confirmation = nil }
+	  it { should_not be_valid }
+	end
+	# Pass should be >= 6 characters long
+	describe "with a password that's too short" do
+	  before { @user.password = @user.password_confirmation = "a" * 5 }
+	  it { should be_invalid }
+	end
+	# Tests for user logging in
+	# retrieve user by email
+	describe "return value of authenticate method" do
+	  before { @user.save }
+	  let(:found_user) { User.find_by_email(@user.email) }
 
+	  # when passw's match
+	  describe "with valid password" do
+	    it { should == found_user.authenticate(@user.password) }
+	  end
+
+	  # when passw's mismatch
+	  describe "with invalid password" do
+	    let(:user_for_invalid_password) { found_user.authenticate("invalid") }
+
+	    it { should_not == user_for_invalid_password }
+	    specify { user_for_invalid_password.should be_false }
+	  end
+	end
 end
