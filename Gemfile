@@ -7,12 +7,26 @@ gem 'bootstrap-sass', '2.1'
 
 gem 'sqlite3'
 
+group :development do
+  gem 'annotate', '2.5.0'
+end
+
+group :test do
+  gem 'capybara', '1.1.2'
+  gem 'rb-fchange', '0.0.5'
+  gem 'rb-notifu', '0.0.4'
+  gem 'win32console', '1.3.0'
+  gem 'wdm', '~> 0.1'
+end
+
 group :development, :test do
   gem 'rspec-rails', '2.11.0'
   gem 'guard-rspec', '1.2.1'
   gem 'guard-spork', '1.2.0'
   gem 'spork', '0.9.2'
 end
+
+
 
 # Gems used only for assets and not required
 # in production environments by default.
@@ -28,13 +42,7 @@ end
 
 gem 'jquery-rails'
 
-group :test do
-  gem 'capybara', '1.1.2'
-  gem 'rb-fchange', '0.0.5'
-  gem 'rb-notifu', '0.0.4'
-  gem 'win32console', '1.3.0'
-  gem 'wdm', '~> 0.1'
-end
+
 
 # To use ActiveModel has_secure_password
 # gem 'bcrypt-ruby', '~> 3.0.0'
