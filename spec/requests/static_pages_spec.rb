@@ -67,9 +67,9 @@ describe "Static pages" do
     should have_selector 'title', text: full_title('Contact')
     click_link "Home"
     click_link "Sign up now!"
-    should have_selector 'title', text: full_title('Sign Up')
+    should have_selector 'title', text: full_title('Sign up')
     click_link "sample app"
-    should have_selector 'title', text: full_title('Sample App')
+    should have_selector 'title', text: full_title('')
   end
 
 end
