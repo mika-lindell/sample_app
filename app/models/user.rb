@@ -39,7 +39,8 @@ class User < ActiveRecord::Base
 
 	# Validate passwords
 	validates :password, 
-						presence: true,
+						# presence: true, <= Removed to avoid duplicate message
 						 length: { minimum: 6 }
-	validates :password_confirmation, presence: true
+	validates :password_confirmation, 
+						presence: true
 end

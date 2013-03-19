@@ -1,3 +1,4 @@
+# Create database stuff for tests
 FactoryGirl.define do
   factory :user do
     name     "Michael Hartl"
