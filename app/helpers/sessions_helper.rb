@@ -4,11 +4,15 @@ module SessionsHelper
     cookies.permanent[:remember_token] = user.remember_token
     self.current_user = user
   end
-
   # Check if user is logged in to our site
   def logged_in?
   	# This line reads: if current user is not nil return true. Else return false.
   	!current_user.nil?
+  end
+  # Log out the user
+  def log_out
+  	self.current_user = nil
+  	cookies.delete(:remember_token)
   end
   # Define what happens when we assign value to self.current_user
   def current_user=(user)

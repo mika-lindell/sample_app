@@ -29,7 +29,6 @@ describe "Authentication" do
         it { should_not have_selector('div.alert.alert-error') }
       end
 
-
     end
   
   	# Inputted data is valid
@@ -41,15 +40,21 @@ describe "Authentication" do
 	      	# Make email upper case to make sure our database is case-insensitive
 	        fill_in "Email",    with: user.email.upcase
 	        fill_in "Password", with: user.password
-	        click_button "Sign in"
+	        click_button "Log in"
 	      end
 
 	      it { should have_selector('title', text: user.name) }
 	      it { should have_link('Profile', href: user_path(user)) }
-	      it { should have_link('Sign out', href: logout_path) }
-	      it { should_not have_link('Sign in', href: login_path) }
-	    end
-
+	      it { should have_link('Log out', href: logout_path) }
+	      it { should_not have_link('Log in', href: login_path) }
+	      
+	      # Test logging out
+	      describe "followed by logout" do
+	        before { click_link "Log out" }
+	        it { should have_link('Log in') }
+	      end
     end
+
+  end
 
 end
