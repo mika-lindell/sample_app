@@ -1,8 +1,8 @@
 # Create database stuff for tests
 FactoryGirl.define do
   factory :user do
-    name     "Michael Hartl"
-    email    "michael@example.com"
+    name     "Mika Lindell"
+    email    "mika@example.com"
     password "foobar"
     password_confirmation "foobar"
   end
