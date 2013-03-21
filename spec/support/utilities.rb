@@ -1,6 +1,4 @@
 
-#include ApplicationHelper
-
 def full_title(page_title)
   base_title = "Ruby on Rails Tutorial Sample App"
   if page_title.empty?
@@ -8,4 +6,13 @@ def full_title(page_title)
   else
     "#{base_title} | #{page_title}"
   end
+end
+
+def log_in(user)
+  visit login_path
+  fill_in "Email",    with: user.email
+  fill_in "Password", with: user.password
+  click_button "Log in"
+  # Log in when not using Capybara as well.
+  cookies[:remember_token] = user.remember_token
 end
