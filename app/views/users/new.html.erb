@@ -3,7 +3,9 @@
 
 <div class="row">
   <div class="span6 offset3">
-    <%= form_for(@user) do |f| %>
+    <%= 
+      # @user var: Rails automagically POSTs form content to URI '/users'
+      form_for(@user) do |f| %>
     	<%= render 'shared/error_messages' %>
 
       <%= f.label :name %>
@@ -20,5 +22,7 @@
 
       <%= f.submit "Create my account", class: "btn btn-large btn-primary" %>
     <% end %>
+
+    <p>Already have an account? <%= link_to "Log in now!", login_path %></p>
   </div>
 </div>

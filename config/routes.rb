@@ -1,11 +1,17 @@
 SampleApp::Application.routes.draw do
   # Use REST-style URIs for User-model
+  # new, create , show, edit, destroy
   resources :users
+  # Use REST for sessions controller, limit to new, create and delete
+  resources :sessions, only: [:new, :create, :destroy]
 
   root to: 'static_pages#home'
 
   match '/signup',  to: 'users#new'
-  
+  match '/login',  to: 'sessions#new'
+  # via means it's invoked using http DELETE request
+  match '/logout', to: 'sessions#destroy', via: :delete
+
   match '/help', to: 'static_pages#help'
   match '/about', to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
