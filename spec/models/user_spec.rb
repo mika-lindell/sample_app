@@ -28,6 +28,8 @@ describe User do
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
+  it { should respond_to(:remember_token) }
+  it { should respond_to(:authenticate) }
 
   # By setting this we only need to test cases,
   # where things does NOT validate.
@@ -132,4 +134,11 @@ describe User do
 	    specify { user_for_invalid_password.should be_false }
 	  end
 	end
+  # Test for "forever" sessions token stored in db (it's also on users cookie)
+  describe "remember token" do
+    before { @user.save }
+    # We can use 'its()', since the 'subject' was referenced before
+    its(:remember_token) { should_not be_blank }
+  end
+
 end
