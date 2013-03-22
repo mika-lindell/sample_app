@@ -1,5 +1,7 @@
 require 'spec_helper'
 
+# Test related for user authentication
+
 describe "Authentication" do
 
   subject { page }
@@ -44,10 +46,13 @@ describe "Authentication" do
 	      end
 
 	      it { should have_selector('title', text: user.name) }
-	      it { should have_link('Profile', href: user_path(user)) }
+	      
+        it { should have_link('Users',    href: users_path) }
+        it { should have_link('Profile', href: user_path(user)) }
 	      it { should have_link('Settings', href: edit_user_path(user)) }
         it { should have_link('Log out', href: logout_path) }
-	      it { should_not have_link('Log in', href: login_path) }
+	      
+        it { should_not have_link('Log in', href: login_path) }
 	      
 	      # Test logging out
 	      describe "followed by logout" do
@@ -78,6 +83,28 @@ describe "Authentication" do
           specify { response.should redirect_to(login_path) }
         end
 
+        describe "visiting the user index" do
+          before { visit users_path }
+          it { should have_selector('title', text: 'Log in') }
+        end
+
+      end
+
+      # Friendly forwarding
+      describe "when attempting to visit a protected page" do
+        before do
+          visit edit_user_path(user)
+          fill_in "Email",    with: user.email
+          fill_in "Password", with: user.password
+          click_button "Log in"
+        end
+
+        describe "after logging in" do
+
+          it "should render the desired protected page" do
+            page.should have_selector('title', text: 'Edit user')
+          end
+        end
       end
 
     end

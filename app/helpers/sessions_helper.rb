@@ -31,4 +31,17 @@ module SessionsHelper
     user == current_user
   end
 
+  # Redirect to last requested URI
+  def redirect_back_or(default)
+    # Session variable is used unless it's nil.
+    # When nil, the default-prametre is used
+    redirect_to(session[:return_to] || default)
+    session.delete(:return_to)
+  end
+
+  # Store last requested URI by user (Not necessarily the page we currently on of there are redirects)
+  def store_location
+
+    session[:return_to] = request.url
+  end
 end

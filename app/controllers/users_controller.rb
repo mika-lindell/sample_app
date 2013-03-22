@@ -1,12 +1,20 @@
 class UsersController < ApplicationController
   # What runs before any method in this controller
-  # Restricted to run only before edit and update
-  before_filter :logged_in_user, only: [:edit, :update]
+  # Logging is required to access these pages. Restricted to run only before edit and update
+  before_filter :logged_in_user, only: [:index, :edit, :update]
+  # Makes sure correct user is trying to edit the profile
   before_filter :correct_user,   only: [:edit, :update]
+  
+  # Users listing
+  def index
+    @users = User.all
+  end
+
   # Page to create new user
   def new
   	@user = User.new
   end
+
   # Action to create new user
   def create
     @user = User.new(params[:user])
@@ -20,15 +28,18 @@ class UsersController < ApplicationController
       render 'new'
     end
   end
+
   # Page to show user
   def show
   	@user = User.find(params[:id])
   end
+
   # Page to edit user
   def edit
     # @user is already set by correct_user
     # @user = User.find(params[:id])
   end
+  
   # Action that edits (updates) user
   def update
     # @user is already set by correct_user
@@ -49,7 +60,10 @@ class UsersController < ApplicationController
   private
     # Defines what happens when user tries to access restricted page
     def logged_in_user
-      redirect_to login_url, notice: "Please log in." unless logged_in?
+      unless logged_in?
+        store_location
+        redirect_to login_url, notice: "Please log in." unless logged_in?
+      end
     end
     # Defines what happens when one tries to edit profile of another user
     def correct_user
