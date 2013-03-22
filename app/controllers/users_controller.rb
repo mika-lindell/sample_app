@@ -7,7 +7,7 @@ class UsersController < ApplicationController
   
   # Users listing
   def index
-    @users = User.all
+    @users = User.paginate(page: params[:page])
   end
 
   # Page to create new user
