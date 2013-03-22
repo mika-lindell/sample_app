@@ -9,6 +9,7 @@
 #  updated_at      :datetime         not null
 #  password_digest :string(255)
 #  remember_token  :string(255)
+#  admin           :boolean          default(FALSE)
 #
 
 require 'spec_helper'
@@ -23,20 +24,34 @@ describe User do
 
   subject { @user }
 
-  #"Sanity" XD tests...
+  # "Sanity" XD tests...
+  # One row must containt these columns in user model
   it { should respond_to(:name) }
   it { should respond_to(:email) }
   it { should respond_to(:password_digest) }
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:remember_token) }
+  #  It should work with these methods
+  it { should respond_to(:admin) }
   it { should respond_to(:authenticate) }
 
   # By setting this we only need to test cases,
   # where things does NOT validate.
   # Except for some stuff like 'format' validations
   it { should be_valid }
+  # By default user should not be admin
+  it { should_not be_admin }
 
+  describe "with admin attribute set to 'true'" do
+    before do
+      @user.save!
+      @user.toggle!(:admin)
+    end
+
+    it { should be_admin }
+  end
+  
   # Name validations
   describe "when name is not present" do
     before { @user.name = " " }

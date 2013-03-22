@@ -9,10 +9,14 @@
 #  updated_at      :datetime         not null
 #  password_digest :string(255)
 #  remember_token  :string(255)
+#  admin           :boolean          default(FALSE)
 #
 
 class User < ActiveRecord::Base
 	# Make these fields accessible outside activerecord
+	# Note: these are also aceesible via URI! Super inmportant define waht you want to expose!
+	# Without this request 'put /users/17?admin=1' would make user with id=17 admin!
+	# Define attr_accessible for every model
 	attr_accessible :name, 
 									:email, 
 									:password, 

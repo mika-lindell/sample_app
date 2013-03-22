@@ -4,7 +4,9 @@ class UsersController < ApplicationController
   before_filter :logged_in_user, only: [:index, :edit, :update]
   # Makes sure correct user is trying to edit the profile
   before_filter :correct_user,   only: [:edit, :update]
-  
+  # Restrict delete action only for admins
+  before_filter :admin_user,     only: :destroy
+
   # Users listing
   def index
     @users = User.paginate(page: params[:page])
@@ -40,7 +42,7 @@ class UsersController < ApplicationController
     # @user = User.find(params[:id])
   end
   
-  # Action that edits (updates) user
+  # Action which edits (updates) user
   def update
     # @user is already set by correct_user
     # @user = User.find(params[:id])
@@ -56,6 +58,13 @@ class UsersController < ApplicationController
     end
   end
 
+  # Action which deletes user
+  def destroy
+    User.find(params[:id]).destroy
+    flash[:success] = "User destroyed."
+    redirect_to users_url
+  end
+
   # Methods private for this class
   private
     # Defines what happens when user tries to access restricted page
@@ -69,5 +78,8 @@ class UsersController < ApplicationController
     def correct_user
       @user = User.find(params[:id])
       redirect_to(root_path) unless current_user?(@user)
+    end
+    def admin_user
+      redirect_to(root_path) unless current_user.admin?
     end
 end
