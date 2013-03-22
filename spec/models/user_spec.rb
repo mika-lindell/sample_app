@@ -43,6 +43,15 @@ describe User do
   # By default user should not be admin
   it { should_not be_admin }
 
+  # If you have only one test for model
+  # It should be tests which makes you have set attr_accessible in model class
+  describe "accessible attributes" do
+
+    it "should not allow access to admin" do
+      expect{ User.new(admin: true) }.to raise_error(ActiveModel::MassAssignmentSecurity::Error)
+    end    
+  end
+
   describe "with admin attribute set to 'true'" do
     before do
       @user.save!

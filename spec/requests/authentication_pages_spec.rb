@@ -30,7 +30,6 @@ describe "Authentication" do
         before { click_link "Home" }
         it { should_not have_selector('div.alert.alert-error') }
       end
-
     end
   
   	# Inputted data is valid
@@ -66,7 +65,35 @@ describe "Authentication" do
 
   describe "authorization" do
 
+    describe "for logged-in users" do
+
+      let(:user) { FactoryGirl.create(:user) }
+      before { log_in user }
+
+      describe "in the Users controller" do
+
+        describe "submitting to view the new page" do
+          before { get new_user_path }
+          # With using http request methods directly, one must use response-object instead page-object
+          specify { response.should redirect_to(user) }
+        end
+
+        describe "submitting to the create action" do
+          before { post users_path(user) }
+          # With using http request methods directly, one must use response-object instead page-object
+          specify { response.should redirect_to(user) }
+        end
+      end
+
+    end
+
     describe "for non-logged-in users" do
+      
+      it { should_not have_link('Users',    href: users_path) }
+      it { should_not have_link('Profile', href: user_path(user)) }
+      it { should_not have_link('Settings', href: edit_user_path(user)) }
+      it { should_not have_link('Log out', href: logout_path) }
+
       let(:user) { FactoryGirl.create(:user) }
 
       describe "in the Users controller" do
@@ -104,6 +131,18 @@ describe "Authentication" do
           it "should render the desired protected page" do
             page.should have_selector('title', text: 'Edit user')
           end
+
+          describe "when logging in again" do
+            before do
+              delete logout_path
+              visit login_path
+              log_in user
+            end
+
+            it "should render the default (profile) page" do
+              page.should have_selector('title', text: user.name) 
+            end
+          end
         end
       end
 
@@ -137,6 +176,15 @@ describe "Authentication" do
       end
     end
 
+    describe "as admin user" do
+      let(:admin) { FactoryGirl.create(:admin) }
+      before { log_in admin }
+
+      describe "submitting a DELETE request to self" do
+        before { delete user_path(admin) }
+        specify { response.should redirect_to(root_path) }        
+      end
+    end
   end
 
 end

@@ -14,20 +14,32 @@ class UsersController < ApplicationController
 
   # Page to create new user
   def new
-  	@user = User.new
+    if logged_in?
+      # User who has logged in has no need to access create action
+      redirect_to current_user
+    else
+      # Get ready to display signup page by declaring instance var
+  	  @user = User.new
+    end
   end
 
   # Action to create new user
   def create
-    @user = User.new(params[:user])
-    if @user.save
-      # Handle a successful save.
-      log_in @user
-      flash[:success] = "Welcome to the Sample App!"
-      redirect_to @user
-    else
-    	# Render signup page
-      render 'new'
+    if logged_in?
+      # User who has logged in has no need to access create action
+      redirect_to current_user
+    else 
+      # Ready to create new user
+      @user = User.new(params[:user])
+      if @user.save
+        # Handle a successful save.
+        log_in @user
+        flash[:success] = "Welcome to the Sample App!"
+        redirect_to @user
+      else
+      	# Render signup page
+        render 'new'
+      end
     end
   end
 
@@ -60,9 +72,15 @@ class UsersController < ApplicationController
 
   # Action which deletes user
   def destroy
-    User.find(params[:id]).destroy
-    flash[:success] = "User destroyed."
-    redirect_to users_url
+    @user = User.find(params[:id])
+    if @user == current_user
+      # Make sure one can't delete his own profile
+      redirect_to root_path
+    else
+      @user.destroy
+      flash[:success] = "User destroyed."
+      redirect_to users_url
+    end
   end
 
   # Methods private for this class
