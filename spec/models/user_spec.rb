@@ -168,4 +168,20 @@ describe User do
     its(:remember_token) { should_not be_blank }
   end
 
+  describe "micropost associations" do
+
+    before { @user.save }
+    let!(:older_micropost) do 
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.day.ago)
+    end
+    let!(:newer_micropost) do
+      FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
+    end
+
+    # Test that microposts come with right order from database
+    # Also test that has_many-association works: user.microposts is an array
+    it "should have the right microposts in the right order" do
+      @user.microposts.should == [newer_micropost, older_micropost]
+    end 
+  end
 end
