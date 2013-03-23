@@ -32,9 +32,11 @@ describe User do
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:remember_token) }
-  #  It should work with these methods
   it { should respond_to(:admin) }
+  #  It should work with this method -> comes from adding has_secure_password
   it { should respond_to(:authenticate) }
+  
+  it { should respond_to(:microposts) }
 
   # By setting this we only need to test cases,
   # where things does NOT validate.

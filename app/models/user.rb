@@ -25,6 +25,9 @@ class User < ActiveRecord::Base
 	# Remember correct names: password_digest, :password, :password_confirmation
 	has_secure_password
 
+	# Associate user with multiple microposts
+	has_many :microposts
+
 	# Make lowercase emails before save for system compatibility
 	before_save { email.downcase! }
 	before_save :create_remember_token
