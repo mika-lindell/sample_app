@@ -25,8 +25,8 @@ class User < ActiveRecord::Base
 	# Remember correct names: password_digest, :password, :password_confirmation
 	has_secure_password
 
-	# Associate user with multiple microposts
-	has_many :microposts
+	# Associate user with multiple microposts and make sure microposts are destroyed with user
+	has_many :microposts, dependent: :destroy
 
 	# Make lowercase emails before save for system compatibility
 	before_save { email.downcase! }

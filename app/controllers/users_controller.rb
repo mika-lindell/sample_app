@@ -46,6 +46,8 @@ class UsersController < ApplicationController
   # Page to show user
   def show
   	@user = User.find(params[:id])
+    # Make microposts available for users show-action
+    @microposts = @user.microposts.paginate(page: params[:page])
   end
 
   # Page to edit user

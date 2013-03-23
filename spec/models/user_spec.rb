@@ -182,6 +182,17 @@ describe User do
     # Also test that has_many-association works: user.microposts is an array
     it "should have the right microposts in the right order" do
       @user.microposts.should == [newer_micropost, older_micropost]
+    end
+
+        # When user is deleted associated microposts should too
+    it "should destroy associated microposts" do
+      microposts = @user.microposts.dup
+      @user.destroy
+
+      microposts.should_not be_empty
+      microposts.each do |micropost|
+        Micropost.find_by_id(micropost.id).should be_nil
+      end
     end 
   end
 end
