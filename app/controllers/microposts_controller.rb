@@ -1,8 +1,9 @@
 class MicropostsController < ApplicationController
   # Make sure only logged in users have access to microposts
-  # If you want to limit logged access to create and destroy only => before_filter :logged_in_user, only: [:create, :destroy]
-  before_filter :logged_in_user
-
+  before_filter :logged_in_user, only: [:create, :destroy]
+  # Logged in user only makes sure that any user is logged in
+  # This makes sure it's the correct user
+  before_filter :correct_user,   only: :destroy
   def create
   	@micropost = current_user.microposts.build(params[:micropost])
     if @micropost.save
@@ -16,5 +17,15 @@ class MicropostsController < ApplicationController
   end
 
   def destroy
+      @micropost.destroy
+    redirect_to root_url
   end
+
+  private
+
+    def correct_user
+      @micropost = current_user.microposts.find_by_id(params[:id])
+      redirect_to root_url if @micropost.nil?
+    end
+
 end

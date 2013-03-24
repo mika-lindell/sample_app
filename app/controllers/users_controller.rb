@@ -2,7 +2,9 @@ class UsersController < ApplicationController
   # What runs before any method in this controller
   # Logging is required to access these pages. Restricted to run only before edit and update
   before_filter :logged_in_user, only: [:index, :edit, :update]
-  # Makes sure correct user is trying to edit the profile
+  # Logged in user only makes sure that any user is logged in
+  # This makes sure it's the correct user
+  # Authentication = user is logged in, authorization = access rights to a specific object
   before_filter :correct_user,   only: [:edit, :update]
   # Restrict delete action only for admins
   before_filter :admin_user,     only: :destroy
