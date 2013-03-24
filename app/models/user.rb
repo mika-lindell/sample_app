@@ -52,7 +52,13 @@ class User < ActiveRecord::Base
 						 length: { minimum: 6 }
 	validates :password_confirmation, 
 						presence: true
-						
+
+	def feed
+    # This is preliminary. See "Following users" for the full implementation.
+    # The question mark ensures that user submitted value 'id' is escaped 
+    Micropost.where("user_id = ?", id)
+  end
+
 	# Make all methods after this to be visible only for this class
 	private
 

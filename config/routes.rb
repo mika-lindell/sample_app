@@ -1,9 +1,15 @@
 SampleApp::Application.routes.draw do
-  # Use REST-style URIs for User-model
+  get "microposts/create"
+
+  get "microposts/destroy"
+
+  # REST for User-model
   # new, create , show, edit, destroy
   resources :users
-  # Use REST for sessions controller, limit to new, create and delete
+  # REST for sessions controller, limit to new, create and delete
   resources :sessions, only: [:new, :create, :destroy]
+  # REST for microposts. Limit to create and destroy
+  resources :microposts, only: [:create, :destroy]
 
   root to: 'static_pages#home'
 
@@ -15,8 +21,6 @@ SampleApp::Application.routes.draw do
   match '/help', to: 'static_pages#help'
   match '/about', to: 'static_pages#about'
   match '/contact', to: 'static_pages#contact'
-
-  
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

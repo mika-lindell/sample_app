@@ -31,6 +31,14 @@ module SessionsHelper
     user == current_user
   end
 
+  # Defines what happens when user tries to access restricted page
+  def logged_in_user
+    unless logged_in?
+      store_location
+      redirect_to login_url, notice: "Please log in." unless logged_in?
+    end
+  end
+  
   # Redirect to last requested URI
   def redirect_back_or(default)
     # Session variable is used unless it's nil.

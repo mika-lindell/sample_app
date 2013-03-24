@@ -77,7 +77,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
     if @user == current_user
       # Make sure one can't delete his own profile
-      redirect_to root_path
+      redirect_to root_url
     else
       @user.destroy
       flash[:success] = "User destroyed."
@@ -87,19 +87,12 @@ class UsersController < ApplicationController
 
   # Methods private for this class
   private
-    # Defines what happens when user tries to access restricted page
-    def logged_in_user
-      unless logged_in?
-        store_location
-        redirect_to login_url, notice: "Please log in." unless logged_in?
-      end
-    end
     # Defines what happens when one tries to edit profile of another user
     def correct_user
       @user = User.find(params[:id])
-      redirect_to(root_path) unless current_user?(@user)
+      redirect_to(root_url) unless current_user?(@user)
     end
     def admin_user
-      redirect_to(root_path) unless current_user.admin?
+      redirect_to(root_url) unless current_user.admin?
     end
 end

@@ -37,6 +37,7 @@ describe User do
   it { should respond_to(:authenticate) }
   
   it { should respond_to(:microposts) }
+  it { should respond_to(:feed) }
 
   # By setting this we only need to test cases,
   # where things does NOT validate.
@@ -184,7 +185,7 @@ describe User do
       @user.microposts.should == [newer_micropost, older_micropost]
     end
 
-        # When user is deleted associated microposts should too
+    # When user is deleted associated microposts should too
     it "should destroy associated microposts" do
       microposts = @user.microposts.dup
       @user.destroy
@@ -193,6 +194,16 @@ describe User do
       microposts.each do |micropost|
         Micropost.find_by_id(micropost.id).should be_nil
       end
-    end 
+    end
+
+    describe "status" do
+      let(:unfollowed_post) do
+        FactoryGirl.create(:micropost, user: FactoryGirl.create(:user))
+      end
+
+      its(:feed) { should include(newer_micropost) }
+      its(:feed) { should include(older_micropost) }
+      its(:feed) { should_not include(unfollowed_post) }
+    end
   end
 end
