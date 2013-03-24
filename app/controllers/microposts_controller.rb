@@ -9,6 +9,8 @@ class MicropostsController < ApplicationController
       flash[:success] = "Micropost created!"
       redirect_to root_url
     else
+      # Supply empty array in case of failed creation: Home page expects this var to exist
+      @feed_items = []
       render 'static_pages/home'
     end
   end
