@@ -30,10 +30,21 @@ class User < ActiveRecord::Base
 
 	# Associate user with followers, note use of foreign_key-param
 	has_many :relationships, foreign_key: "follower_id", dependent: :destroy
-	# To understand what's going on here, check 'source'-param and take a look at relationships model
-	# Also note use of 'through'-param
+	# One should read :followed as 'followed_id' => Check 'Relationship'-model for enlightment
+	# Note use of 'through'-param => We don't have full object data in db, just reference to certain user id
 	has_many :followed_users, through: :relationships, source: :followed
-	
+	# We re-use Relationship-model under different name, 
+	# and change primary key to followed_id, 
+	# in order to return all users following certain user
+	# Look for line starting with 'has_many :relationships' to understand what's going on.
+	has_many :reverse_relationships, foreign_key: "followed_id",
+                                   class_name:  "Relationship",
+                                   dependent:   :destroy
+  # Look line above to understand.
+  # One should read :follower as 'follower_id' => Check 'Relationship'-model for enlightment
+	# Note use of 'through'-param =>  We don't have full object data in db, just reference to certain user id
+  has_many :followers, through: :reverse_relationships, source: :follower
+
 	# Make lowercase emails before save for system compatibility
 	before_save { email.downcase! }
 	before_save :create_remember_token
@@ -78,7 +89,7 @@ class User < ActiveRecord::Base
   def unfollow!(other_user)
     relationships.find_by_followed_id(other_user.id).destroy
   end
-  
+
 	# Make all methods after this to be visible only for this class
 	private
 
