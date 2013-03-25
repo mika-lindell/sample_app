@@ -5,7 +5,14 @@ SampleApp::Application.routes.draw do
 
   # REST for User-model
   # new, create , show, edit, destroy
-  resources :users
+  resources :users do
+    # Member method means that the routes respond to URIs containing the user id
+    # If you want something without id, use collection instead of member
+    member do
+      # Makes URIs like '/users/1/following' and '/users/1/followers'
+      get :following, :followers
+    end
+  end
   # REST for sessions controller, limit to new, create and delete
   resources :sessions, only: [:new, :create, :destroy]
   # REST for microposts. Limit to create and destroy
