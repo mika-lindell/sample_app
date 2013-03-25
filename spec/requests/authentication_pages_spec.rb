@@ -14,7 +14,7 @@ describe "Authentication" do
     it { should have_selector('title', text: 'Log in') }
   end
 
-  # Test logging in process
+  # Test logging in process 
   describe "login" do
     before { visit login_path }
 
@@ -44,7 +44,7 @@ describe "Authentication" do
 	        click_button "Log in"
 	      end
 
-	      it { should have_selector('title', text: user.name) }
+	      it { should have_selector('h1', text: user.name) }
 	      
         it { should have_link('Users',    href: users_path) }
         it { should have_link('Profile', href: user_path(user)) }
@@ -153,7 +153,7 @@ describe "Authentication" do
             end
 
             it "should render the default (profile) page" do
-              should have_selector('title', text: user.name) 
+              should have_selector('h1', text: user.name) 
             end
           end
         end

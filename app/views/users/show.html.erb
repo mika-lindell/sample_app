@@ -6,6 +6,7 @@
 				<%= gravatar_for @user %>
 				<%= @user.name %>
      </h1>
+     <p><%= render 'follow_form' if logged_in? %></p>
     </section>
   </aside>
   <div class="span8">

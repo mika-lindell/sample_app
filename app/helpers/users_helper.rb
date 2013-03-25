@@ -1,7 +1,7 @@
 module UsersHelper
 
 	# Returns Gravatar for given email (gravatar.com)
-	def gravatar_for(user, options = { size: 50 })
+	def gravatar_for(user, options = { size: 70 })
 		gravatar_id = Digest::MD5::hexdigest(user.email.downcase)
 		size = options[:size]
 		# &d=mm param in URI changes the default profile pic if no image is associated to email address
