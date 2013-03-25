@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   # What runs before any method in this controller
   # Logging is required to access these pages. Restricted to run only before edit and update
-  before_filter :logged_in_user, only: [:index, :edit, :update]
+  before_filter :logged_in_user, only: [:index, :edit, :update, :destroy,  :following, :followers]
   # Logged in user only makes sure that any user is logged in
   # This makes sure it's the correct user
   # Authentication = user is logged in, authorization = access rights to a specific object
@@ -85,6 +85,21 @@ class UsersController < ApplicationController
       flash[:success] = "User destroyed."
       redirect_to users_url
     end
+  end
+
+  # Display following and followers index
+  def following
+    @title = "Following"
+    @user = User.find(params[:id])
+    @users = @user.followed_users.paginate(page: params[:page])
+    render 'show_follow'
+  end
+
+  def followers
+    @title = "Followers"
+    @user = User.find(params[:id])
+    @users = @user.followers.paginate(page: params[:page])
+    render 'show_follow'
   end
 
   # Methods private for this class

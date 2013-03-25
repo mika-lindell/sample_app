@@ -1,6 +1,7 @@
 <% # Does nothing when @user is not nil as on profile page.
 # Assigns current_user to @user when it's nil like on home page. %>
 <% @user ||= current_user %>
+
 <div class="stats">
   <a href="<%= following_user_path(@user) %>">
     <strong id="following" class="stat">
