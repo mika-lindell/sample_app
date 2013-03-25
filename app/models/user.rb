@@ -28,6 +28,12 @@ class User < ActiveRecord::Base
 	# Associate user with multiple microposts and make sure microposts are destroyed with user
 	has_many :microposts, dependent: :destroy
 
+	# Associate user with followers, note use of foreign_key-param
+	has_many :relationships, foreign_key: "follower_id", dependent: :destroy
+	# To understand what's going on here, check 'source'-param and take a look at relationships model
+	# Also note use of 'through'-param
+	has_many :followed_users, through: :relationships, source: :followed
+	
 	# Make lowercase emails before save for system compatibility
 	before_save { email.downcase! }
 	before_save :create_remember_token
@@ -59,6 +65,20 @@ class User < ActiveRecord::Base
     Micropost.where("user_id = ?", id)
   end
 
+  # Check if we are following certain user
+  # Note that we are using 'find_by_followed_id'-method, which looks only in followed_id column in 'ralationship'-model
+	def following?(other_user)
+    relationships.find_by_followed_id(other_user.id)
+  end
+  # Make user to follow another
+  def follow!(other_user)
+    relationships.create!(followed_id: other_user.id)
+  end
+
+  def unfollow!(other_user)
+    relationships.find_by_followed_id(other_user.id).destroy
+  end
+  
 	# Make all methods after this to be visible only for this class
 	private
 
