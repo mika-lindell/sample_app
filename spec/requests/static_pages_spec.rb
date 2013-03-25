@@ -40,6 +40,13 @@ describe "Static pages" do
       end
     end
 
+    describe "for non-logged-in users" do
+      before {visit root_path}
+
+      it { should have_link('Sign up now!', href: signup_path)}
+      it { should have_link('Log in now!', href: login_path) }
+    end
+
   end
 
   describe "Help page" do

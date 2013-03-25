@@ -9,7 +9,7 @@ class SessionsController < ApplicationController
   		log_in user
       # Friendly forwarding
       # Makes sure user is forwarded to protected page he was trying to access prior login
-      redirect_back_or user
+      redirect_back_or root_url
   	else
   		# Create error message. 
   		# flash.now makes sure that message gets removed with render-call and not require http request for that

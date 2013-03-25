@@ -12,7 +12,7 @@
 class Micropost < ActiveRecord::Base
 	attr_accessible :content
 
-	validates :content, presence: true, length: { maximum: 140 }
+	validates :content, presence: true, length: { maximum: MICROPOST_CONTENT_MAXLENGTH }
   validates :user_id, presence: true
 
   # Associate micropost with single user

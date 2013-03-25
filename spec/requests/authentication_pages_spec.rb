@@ -142,7 +142,7 @@ describe "Authentication" do
         describe "after logging in" do
 
           it "should render the desired protected page" do
-            page.should have_selector('title', text: 'Edit user')
+            should have_selector('title', text: 'Edit user')
           end
 
           describe "when logging in again" do
@@ -153,7 +153,7 @@ describe "Authentication" do
             end
 
             it "should render the default (profile) page" do
-              page.should have_selector('title', text: user.name) 
+              should have_selector('title', text: user.name) 
             end
           end
         end

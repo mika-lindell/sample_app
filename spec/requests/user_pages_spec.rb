@@ -74,6 +74,13 @@ describe "User pages" do
       it { should have_content(user.microposts.count) }
     end
 
+    describe "as correct user" do
+      before { log_in(user) }
+      it "should delete a micropost" do
+        expect { click_link "delete" }.to change(Micropost, :count).by(-1)
+      end
+    end
+
   end
 	 
 	 # Sign-up page contents
@@ -82,6 +89,8 @@ describe "User pages" do
 
     it { should have_selector('h1',    text: 'Sign up') }
     it { should have_selector('title', text: full_title('Sign up')) }
+  
+    it { should have_link('Log in now!', href: login_path) }
   end
 
   # Signing up action
