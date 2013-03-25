@@ -1,1 +1,0 @@
-# Define application wide constants
