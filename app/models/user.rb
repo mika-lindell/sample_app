@@ -73,7 +73,8 @@ class User < ActiveRecord::Base
 	def feed
     # This is preliminary. See "Following users" for the full implementation.
     # The question mark ensures that user submitted value 'id' is escaped 
-    Micropost.where("user_id = ?", id)
+    #Micropost.where("user_id = ?", id)
+    Micropost.from_users_followed_by(self)
   end
 
   # Check if we are following certain user

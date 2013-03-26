@@ -20,4 +20,18 @@ class Micropost < ActiveRecord::Base
 
   # Set ordering of microposts
   default_scope order: 'microposts.created_at DESC'
+
+  # Retrieve posts for personal feed
+  # Own and follwed users posts
+  def self.from_users_followed_by(user)
+    # Prepare query syntax
+    followed_user_ids = "SELECT followed_id FROM relationships
+                         WHERE follower_id = :user_id"
+    # Use 'IN' SQL-keyword to apply all the values in array to where query.
+    # After 'OR' we ask for our own posts
+    # We create hash in params and the use it to insert values into query 
+    # Values are in method params to insert vars safely to query
+    where("user_id IN (#{followed_user_ids}) OR user_id = :user_id", user_id: user)
+  end
+
 end
