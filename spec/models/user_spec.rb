@@ -184,6 +184,8 @@ describe User do
       FactoryGirl.create(:micropost, user: @user, created_at: 1.hour.ago)
     end
 
+
+
     # Test that microposts come with right order from database
     # Also test that has_many-association works: user.microposts is an array
     it "should have the right microposts in the right order" do
@@ -200,7 +202,7 @@ describe User do
         Micropost.find_by_id(micropost.id).should be_nil
       end
     end
-
+  
     describe "status feed" do
 
       let(:unfollowed_post) do
@@ -244,6 +246,24 @@ describe User do
       before { @user.unfollow!(other_user) }
       it { should_not be_following(other_user) }
     end
+  end
+
+  describe "relationship associations" do
+      let!(:follower) { FactoryGirl.create(:user) }
+      let!(:followed) { FactoryGirl.create(:user) }
+      let!(:relationship) { follower.relationships.build(followed_id: followed.id) }
+
+      it "should delete associated relationships" do
+        relationships = follower.relationships.dup
+        
+        follower.destroy
+        relationships.should_not be_empty
+
+        relationships.each do |relationship|
+          Relationship.find_by_id(relationship.id).should be_nil
+        end
+
+      end
   end
 
 end
