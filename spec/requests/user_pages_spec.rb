@@ -67,6 +67,9 @@ describe "User pages" do
 
 	  it { should have_selector('h1',    text: user.name) }
 	  it { should have_selector('title', text: user.name) }
+
+    it { should have_link("0 following", href: following_user_path(user)) }
+    it { should have_link("0 followers", href: followers_user_path(user)) }
 	
     describe "microposts" do
       it { should have_content(m1.content) }
