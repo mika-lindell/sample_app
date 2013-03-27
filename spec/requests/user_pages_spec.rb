@@ -76,17 +76,9 @@ describe "User pages" do
 
     describe "as correct user" do
       before { log_in(user) }
-
-      it { should have_link('Edit my settings', href: edit_user_path(user)) }
-      
       it "should delete a micropost" do
         expect { click_link "delete" }.to change(Micropost, :count).by(-1)
       end
-    
-    end
-
-    describe "as incorrect user" do
-      it { should_not have_link('Edit my settings', href: edit_user_path(user)) }
     end
 
     describe "follow/unfollow buttons" do
@@ -100,16 +92,12 @@ describe "User pages" do
           expect do
             click_button "Follow"
           end.to change(user.followed_users, :count).by(1)
-
-          should have_link("1 following", href: following_user_path(user))
         end
 
         it "should increment the other user's followers count" do
           expect do
             click_button "Follow"
           end.to change(other_user.followers, :count).by(1)
-
-          should have_link("1 followers", href: followers_user_path(user))
         end
 
         describe "toggling the button" do
